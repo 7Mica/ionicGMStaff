@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { ApiRestProvider } from '../../providers/api-rest/api-rest';
+import { Storage } from '@ionic/storage';
+import { NavController, App } from 'ionic-angular';
+import { EscaneoPage } from '../escaneo/escaneo';
+import { LoginPage } from '../login/login';
+
 
 @Component({
   selector: 'page-conferences',
@@ -7,16 +12,39 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 })
 export class ConferencesPage {
 
-  constructor(private barcodeScanner: BarcodeScanner) {
+  conferencias: any[] = [];
+
+  constructor(
+    private api: ApiRestProvider,
+    private storage: Storage,
+    public navCtrl: NavController,
+    private app: App
+  ) {
+
+    this.getConferencias();
   }
 
-  escanear() {
-    this.barcodeScanner.scan().then(barcodeData => {
-      console.log('Barcode data', barcodeData);
-     }).catch(err => {
-         console.log('Error', err);
-     });
+  escanear(item) {
+    console.log(item);
+    this.app.getRootNav().push(EscaneoPage); 
   }
-  
+
+  async getConferencias() {
+    let asd = await
+      this.storage.get('usuario').then(res => {
+        return res;
+      });
+
+
+
+    this.api.getConferencias(asd.usuario.evento).subscribe(
+      (resp: any) => {
+        this.conferencias = resp.conferencias;
+
+      }, error => {
+
+      });
+  }
+
 
 }

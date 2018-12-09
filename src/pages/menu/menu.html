@@ -14,5 +14,19 @@
 
 
 <ion-content padding>
+  <ion-list>
+    <button ion-item (click)="openPage(friendsPage)">
+      Friends
+    </button>
+    <button ion-item (click)="openPage(eventsPage)">
+      Events
+    </button>
+    <button ion-item (click)="closeMenu()">
+      Close Menu
+    </button>
+    <button ion-item (click)="cerrarSesion()">
+      Cerrar Sesion
+    </button>
 
+  </ion-list>
 </ion-content>

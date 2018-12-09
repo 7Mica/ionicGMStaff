@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, ToastController, AlertController }
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ApiRestProvider } from '../../providers/api-rest/api-rest';
 import { MainPage } from '../pages.index';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the LoginPage page.
@@ -18,24 +20,31 @@ import { MainPage } from '../pages.index';
 })
 export class LoginPage {
 
-  todo : FormGroup;
+  todo: FormGroup;
+  evento: any = '5c041bde7bc0781582f8b8b0';
+  // evento: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private asd: ApiRestProvider
+    private api: ApiRestProvider,
+    private barcodeScanner: BarcodeScanner,
+    private storage: Storage
   ) {
 
     this.todo = new FormGroup({
       email: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required])
     });
+    this.todo.get('email').setValue('michel@gmail.com');
+    this.todo.get('password').setValue('michel');
+    this.scanEventCode();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+
   }
 
   showPswdRecovery() {
@@ -68,26 +77,36 @@ export class LoginPage {
     alert.present();
   }
 
+  scanEventCode() {
+    this.barcodeScanner.scan().then(barcodeData => {
+
+      this.evento = barcodeData;
+    }).catch(err => {
+      console.log('Error', err);
+    });
+  }
+
 
   loginForm() {
-    let data = {
-      "email": this.todo.value.email,
-      "password": this.todo.value.password
-    };
+    // if (!this.evento) {
+    //   this.showToast('No se escaneó el evento', 2000);
+    //   return;
+    // }
+    const data = this.todo.value;
+    data.evento = this.evento;
+    this.api.loginUsuario(data).subscribe((res: any) => {
+      this.storage.set('usuario', res.data).then(
+        res => {
 
+        },
+        error => {
 
-    this.asd.loginUsuario(JSON.stringify(data)).subscribe(data => {
-
-      console.log(data);
-
-
+        }
+      );
       this.navCtrl.push(MainPage);
 
-
-
-
     }, error => {
-      console.log(error.errors);
+      console.log(error);
       this.showToast("Contraseña o correo incorrectos.", 2000);
     });
 
@@ -103,13 +122,11 @@ export class LoginPage {
     });
 
     toast.present();
-
-
   }
 
   showRegistro() {
     console.log('Registro');
-    
+
     // this.navCtrl.push(this.registro);
 
   }
