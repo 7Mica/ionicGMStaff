@@ -7,12 +7,28 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>escaneo</ion-title>
+    <ion-title>Registrar asistencia</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+ 
+  <ion-card *ngIf="data">
+    <ion-card-header>
+      {{data.titulo}}
+    </ion-card-header>
+    <ion-card-content>
+     {{data.descripcion}}
+     <p>Hora: {{data.hora}}</p>
+    </ion-card-content>
+  </ion-card>
 
+  <ion-fab right bottom>
+    <button ion-fab (click)="scanEventCode()">
+      <ion-icon name="qr-scanner"></ion-icon>
+    </button>
+
+  </ion-fab>
 </ion-content>

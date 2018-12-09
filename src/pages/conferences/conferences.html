@@ -1,23 +1,29 @@
-
 <ion-header>
-  <!-- <ion-navbar>
-    <ion-title>Lista de conferencias</ion-title>
-  </ion-navbar> -->
+  <ion-navbar>
+   
+    <ion-searchbar (ionInput)="sjdk"></ion-searchbar>
+  </ion-navbar>
 </ion-header>
 
-<ion-content class="list-avatar-page">
+<ion-content class="list-avatar-page" style="background-color: #E8EAED">
   <ion-list>
-
+    
     <ion-list-header>Hoy</ion-list-header>
 
-    <ion-item *ngFor="let item of conferencias" (click)="escanear(item)">
-      <ion-avatar item-start>
-        <img src="https://picsum.photos/g/200/300">
-      </ion-avatar>
-      <h2>{{item.titulo}}</h2>
-      <p>{{item.ponente.fullName}}</p>
-      <ion-note item-end>{{item.hora}}</ion-note>
-    </ion-item>
+    <ion-card *ngFor="let item of conferencias" (click)="escanear(item)">
+      <img src="https://picsum.photos/g/200/80" />
+      <ion-card-content >
+        <ion-card-title >
+          {{item.titulo}}
+        </ion-card-title>
+        <p >
+          {{item.ponente.fullName}}
+        </p>
+        <p>
+          {{item.hora}}
+        </p>
+      </ion-card-content>
+    </ion-card>
 
   </ion-list>
 

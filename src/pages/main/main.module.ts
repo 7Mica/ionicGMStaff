@@ -9,6 +9,7 @@ import { LoginPage } from '../login/login';
 import { ApiRestProvider } from '../../providers/api-rest/api-rest';
 import { HttpClientModule } from '@angular/common/http';
 import { EscaneoPageModule } from '../escaneo/escaneo.module';
+// import { QRScanner } from '@ionic-native/qr-scanner';
 
 @NgModule({
   declarations: [
@@ -26,13 +27,14 @@ import { EscaneoPageModule } from '../escaneo/escaneo.module';
   imports: [
     IonicPageModule.forChild(MainPage),
     HttpClientModule,
-    EscaneoPageModule
-    
+    EscaneoPageModule,
 
   ],
   providers: [
     BarcodeScanner,
     ApiRestProvider,
+    // QRScanner
+
     
   ]
 })

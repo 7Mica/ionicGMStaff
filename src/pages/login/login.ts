@@ -77,10 +77,10 @@ export class LoginPage {
     alert.present();
   }
 
-  scanEventCode() {
-    this.barcodeScanner.scan().then(barcodeData => {
-
-      this.evento = barcodeData;
+  async scanEventCode() {
+    this.evento = await this.barcodeScanner.scan().then(barcodeData => {
+      
+      return barcodeData.text;
     }).catch(err => {
       console.log('Error', err);
     });
@@ -97,10 +97,12 @@ export class LoginPage {
     this.api.loginUsuario(data).subscribe((res: any) => {
       this.storage.set('usuario', res.data).then(
         res => {
-
+          console.log(res);
+          
         },
         error => {
-
+          console.log(error);
+          
         }
       );
       this.navCtrl.push(MainPage);

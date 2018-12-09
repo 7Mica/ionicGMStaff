@@ -26,7 +26,7 @@ export class ConferencesPage {
 
   escanear(item) {
     console.log(item);
-    this.app.getRootNav().push(EscaneoPage); 
+    this.app.getRootNav().push(EscaneoPage, {data: item}); 
   }
 
   async getConferencias() {

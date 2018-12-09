@@ -26,9 +26,17 @@ export class ApiRestProvider {
   getConferencias(idevento) {
     const url = this.api + 'conferencia/lista/' + idevento;
     return this.http.get(url);
-    
+
   }
-  
+
+  registrarAsistencia(idusuario, idconferencia, idevento) {
+    console.log(idevento);
+    
+    const url = this.api + `conferencia/asistencia/${idevento}/${idconferencia}/${idusuario}`;
+
+    return this.http.put(url, {});
+  }
+
 
   // Login de usuario
   loginUsuario(data: any) {

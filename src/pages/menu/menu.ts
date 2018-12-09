@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, App, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, App } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { toast } from '../../utils/toast';
 import { LoginPage } from '../login/login';
@@ -22,7 +22,7 @@ export class MenuPage {
     public navParams: NavParams,
     private storage: Storage,
     private toast: ToastController,
-    public events: Events) {
+    private app: App) {
   }
 
   ionViewDidLoad() {
@@ -32,8 +32,10 @@ export class MenuPage {
   cerrarSesion() {
 
     this.storage.remove('usuario').then(res => {      
+      this.storage.remove('usuario');
+      this.app.getRootNav().setRoot(LoginPage); 
+      this.navCtrl.popToRoot();
       
-      this.events.publish('user:logout');
     },
       error => {
         const conf = toast;
