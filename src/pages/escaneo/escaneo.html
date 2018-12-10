@@ -14,14 +14,19 @@
 
 
 <ion-content padding>
- 
+
   <ion-card *ngIf="data">
     <ion-card-header>
       {{data.titulo}}
     </ion-card-header>
     <ion-card-content>
-     {{data.descripcion}}
-     <p>Hora: {{data.hora}}</p>
+      <p><b>Descripción:</b></p>
+      <p>{{data.descripcion}}</p>
+      <br>
+      <p><b>Hora: {{data.hora}}</b></p>
+      <p><b>Duración: {{data.duracion}} horas</b></p>
+      <br>
+      <p><b>Fecha: {{ data.fecha | date: 'dd/MM/yyyy'}}</b></p>
     </ion-card-content>
   </ion-card>
 

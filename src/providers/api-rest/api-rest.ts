@@ -29,9 +29,7 @@ export class ApiRestProvider {
 
   }
 
-  registrarAsistencia(idusuario, idconferencia, idevento) {
-    console.log(idevento);
-    
+  registrarAsistencia(idusuario, idconferencia, idevento) {    
     const url = this.api + `conferencia/asistencia/${idevento}/${idconferencia}/${idusuario}`;
 
     return this.http.put(url, {});

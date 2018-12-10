@@ -40,7 +40,7 @@ export class LoginPage {
     });
     this.todo.get('email').setValue('michel@gmail.com');
     this.todo.get('password').setValue('michel');
-    this.scanEventCode();
+    // this.scanEventCode();
   }
 
   ionViewDidLoad() {
@@ -79,7 +79,7 @@ export class LoginPage {
 
   async scanEventCode() {
     this.evento = await this.barcodeScanner.scan().then(barcodeData => {
-      
+
       return barcodeData.text;
     }).catch(err => {
       console.log('Error', err);
@@ -94,23 +94,15 @@ export class LoginPage {
     // }
     const data = this.todo.value;
     data.evento = this.evento;
-    this.api.loginUsuario(data).subscribe((res: any) => {
-      this.storage.set('usuario', res.data).then(
-        res => {
-          console.log(res);
-          
-        },
-        error => {
-          console.log(error);
-          
-        }
-      );
-      this.navCtrl.push(MainPage);
+    this.api.loginUsuario(data).subscribe(
+      (res: any) => {
+        this.storage.set('usuario', res.data).then(re => re).catch( e => console.log(e));
+        this.navCtrl.push(MainPage);
 
-    }, error => {
-      console.log(error);
-      this.showToast("Contraseña o correo incorrectos.", 2000);
-    });
+      }, error => {
+        console.log(error);
+        this.showToast("Contraseña o correo incorrectos.", 2000);
+      });
 
 
 

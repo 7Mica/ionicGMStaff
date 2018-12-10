@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>menu</ion-title>
+    <ion-title>Menú</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,16 +15,19 @@
 
 <ion-content padding>
   <ion-list>
-    <button ion-item (click)="openPage(friendsPage)">
-      Friends
+    <button ion-item>
+      <ion-icon name="help-buoy"></ion-icon>
+      Ayuda
     </button>
-    <button ion-item (click)="openPage(eventsPage)">
-      Events
+    <button ion-item>
+      <ion-icon name="information-circle"></ion-icon>
+
+      Contacto
     </button>
-    <button ion-item (click)="closeMenu()">
-      Close Menu
-    </button>
+
     <button ion-item (click)="cerrarSesion()">
+      <ion-icon name="close-circle"></ion-icon>
+
       Cerrar Sesion
     </button>
 

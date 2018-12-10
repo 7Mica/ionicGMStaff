@@ -3,7 +3,6 @@ import { ApiRestProvider } from '../../providers/api-rest/api-rest';
 import { Storage } from '@ionic/storage';
 import { NavController, App } from 'ionic-angular';
 import { EscaneoPage } from '../escaneo/escaneo';
-import { LoginPage } from '../login/login';
 
 
 @Component({
@@ -13,6 +12,7 @@ import { LoginPage } from '../login/login';
 export class ConferencesPage {
 
   conferencias: any[] = [];
+  conferenciasParaManana: any[] = [];
 
   constructor(
     private api: ApiRestProvider,
@@ -26,7 +26,8 @@ export class ConferencesPage {
 
   escanear(item) {
     console.log(item);
-    this.app.getRootNav().push(EscaneoPage, {data: item}); 
+    
+    this.app.getRootNav().push(EscaneoPage, { data: item });
   }
 
   async getConferencias() {
@@ -34,16 +35,41 @@ export class ConferencesPage {
       this.storage.get('usuario').then(res => {
         return res;
       });
-
-
-
+    // Conferencias para hoy
     this.api.getConferencias(asd.usuario.evento).subscribe(
       (resp: any) => {
-        this.conferencias = resp.conferencias;
 
-      }, error => {
+        this.conferencias = resp.conferencias.filter(conferencia => {
+         
+          if (new Date(conferencia.fecha).getDay() === new Date().getDay() &&
+            new Date(conferencia.fecha).getMonth() === new Date().getMonth() &&
+            new Date(conferencia.fecha).getFullYear() === new Date().getFullYear()) {
 
-      });
+            return conferencia;
+          }
+
+        });
+
+      }, error => { });
+
+      // Conferencias para mañana
+      this.api.getConferencias(asd.usuario.evento).subscribe(
+        (resp: any) => {
+  
+          this.conferenciasParaManana = resp.conferencias.filter(conferencia => {
+            
+            if (new Date(conferencia.fecha).getDay() === new Date().getDay()+1 &&
+              new Date(conferencia.fecha).getMonth() === new Date().getMonth() &&
+              new Date(conferencia.fecha).getFullYear() === new Date().getFullYear()) {
+  
+              return conferencia;
+            }
+  
+          });
+  
+        }, error => { });
+
+
   }
 
 

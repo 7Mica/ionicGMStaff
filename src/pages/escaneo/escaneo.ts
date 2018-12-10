@@ -29,19 +29,14 @@ export class EscaneoPage {
   ) {
 
 
-
   }
 
   ionViewDidLoad() {
     this.data = this.navParams.get('data');
-    console.log(this.navParams.get('data'));
-
-    console.log(this.data);
   }
 
   async scanEventCode() {
     this.asistente = await this.barcodeScanner.scan().then(barcodeData => {
-      console.log(barcodeData);
 
       return barcodeData.text;
     }).catch(err => {
@@ -50,12 +45,12 @@ export class EscaneoPage {
 
     this.api.registrarAsistencia(this.asistente, this.data._id, this.data.evento).subscribe(
       res => {
-        this.toastCtrl.create({message: 'Asistencia registrada correctamente', duration: 3000}).present();
+        this.toastCtrl.create({ message: 'Asistencia registrada correctamente', duration: 3000 }).present();
 
       },
       (error: any) => {
         console.log('ERROR', error.error);
-        this.toastCtrl.create({message: 'Error: '+error.error.error, duration: 3000}).present();
+        this.toastCtrl.create({ message: 'Error: ' + error.error.error, duration: 3000 }).present();
       }
     );
   }
