@@ -1,15 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, App } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, App, LoadingController, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { toast } from '../../utils/toast';
 import { LoginPage } from '../login/login';
+import { AyudaPage } from '../ayuda/ayuda';
+import { CroquisPage } from '../croquis/croquis';
+import { InfoeventoPage } from '../infoevento/infoevento';
 
-/**
- * Generated class for the MenuPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -22,30 +18,66 @@ export class MenuPage {
     public navParams: NavParams,
     private storage: Storage,
     private toast: ToastController,
-    private app: App) {
+    private app: App,
+    public loadingCtrl: LoadingController,
+    private alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad MenuPage');
   }
 
   cerrarSesion() {
 
-    this.storage.remove('usuario').then(res => {      
-      this.storage.remove('usuario');
-      this.app.getRootNav().setRoot(LoginPage); 
-      this.navCtrl.popToRoot();
-      
-    },
-      error => {
-        const conf = toast;
-        conf.message = 'Ocurrió un error al cerrar sesión';
-        this.toast.create(conf).present();
+    let alert = this.alertCtrl.create({
+      title: 'Atencion!',
+      message: `¿Deseas cerrar sesión?`,
 
-      }
-    );
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'OK',
+          handler: () => {
+            const loader = this.loadingCtrl.create({
+              content: 'Cargando conferencias...'
+            });
 
+            loader.present();
 
+            this.storage.clear().then(res => {
+              this.app.getRootNav().setRoot(LoginPage);
+              this.navCtrl.popToRoot();
+              loader.dismiss();
+
+            },
+              error => {
+                loader.dismiss();
+                this.toast.create({ message: 'Ocurrió un error', duration: 3000 }).present();
+
+              }
+            );
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  pushInfoEvento(evento: any) {
+    this.navCtrl.push(InfoeventoPage);
+  }
+
+  pushCroquis(evento: any) {
+    this.navCtrl.push(CroquisPage);
+  }
+
+  pushAyuda(evento: any) {
+    this.navCtrl.push(AyudaPage);
   }
 
 }

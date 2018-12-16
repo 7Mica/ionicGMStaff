@@ -9,7 +9,9 @@ import { LoginPage } from '../login/login';
 import { ApiRestProvider } from '../../providers/api-rest/api-rest';
 import { HttpClientModule } from '@angular/common/http';
 import { EscaneoPageModule } from '../escaneo/escaneo.module';
-// import { QRScanner } from '@ionic-native/qr-scanner';
+import { CroquisPage } from '../croquis/croquis';
+import { AyudaPage } from '../ayuda/ayuda';
+import { InfoeventoPage } from '../infoevento/infoevento';
 
 @NgModule({
   declarations: [
@@ -17,12 +19,18 @@ import { EscaneoPageModule } from '../escaneo/escaneo.module';
     MenuPage,
     ConferencesPage,
     LoginPage,
+    CroquisPage,
+    AyudaPage,
+    InfoeventoPage
   ],
   entryComponents: [
     MainPage,
     MenuPage,
     ConferencesPage,
     LoginPage,
+    CroquisPage,
+    AyudaPage,
+    InfoeventoPage
   ],
   imports: [
     IonicPageModule.forChild(MainPage),
@@ -33,7 +41,6 @@ import { EscaneoPageModule } from '../escaneo/escaneo.module';
   providers: [
     BarcodeScanner,
     ApiRestProvider,
-    // QRScanner
 
     
   ]

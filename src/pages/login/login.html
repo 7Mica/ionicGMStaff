@@ -12,32 +12,17 @@
         <p class="titulo">Staff</p>
       </ion-item>
 
+
       <ion-item class="item-invisible" no-lines>
-        <button ion-button icon-left block round>
-          <ion-icon name="logo-facebook" left></ion-icon>
-          Facebook
-        </button>
-      </ion-item>
-      <ion-item class="item-invisible" no-lines>
-        <button color="danger" ion-button icon-left block round>
-          <ion-icon name="logo-google" left></ion-icon>
-          Google
+        <button color="danger" ion-button icon-left block round (click)="scanEventCode()">
+          Escanear Evento
         </button>
       </ion-item>
 
-      <ion-item class="item-invisible" no-lines>
-        <ion-row>
-          <ion-col>
-            <hr>
-          </ion-col>
-          <ion-col style="text-align: center;">
-            <p>O</p>
-          </ion-col>
-
-          <ion-col>
-            <hr>
-          </ion-col>
-        </ion-row>
+      <ion-item class="item-invisible">
+        <p style="font-size: 130%; text-align: center;" color="white">Código de evento escaneado: </p>
+        <p style="font-size: 130%; text-align: center;" color="white" *ngIf="evento">{{ evento }}</p>
+        <p style="font-size: 130%; text-align: center;" color="white" *ngIf="!evento">Código sin escanear</p>
       </ion-item>
 
       <ion-item class="item-invisible">

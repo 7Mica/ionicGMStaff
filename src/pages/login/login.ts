@@ -1,17 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ApiRestProvider } from '../../providers/api-rest/api-rest';
 import { MainPage } from '../pages.index';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
-
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -21,61 +14,26 @@ import { Storage } from '@ionic/storage';
 export class LoginPage {
 
   todo: FormGroup;
-  evento: any = '5c041bde7bc0781582f8b8b0';
-  // evento: any;
+  evento: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private alertCtrl: AlertController,
     private toastCtrl: ToastController,
     private api: ApiRestProvider,
     private barcodeScanner: BarcodeScanner,
-    private storage: Storage
+    private storage: Storage,
+    public loadingCtrl: LoadingController
   ) {
 
     this.todo = new FormGroup({
       email: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required])
     });
-    this.todo.get('email').setValue('michel@gmail.com');
-    this.todo.get('password').setValue('michel');
-    // this.scanEventCode();
-  }
-
-  ionViewDidLoad() {
 
   }
 
-  showPswdRecovery() {
-
-    let alert = this.alertCtrl.create({
-      title: 'Recuperar contraseña',
-      message: 'Coloca el email para recuperar tu contraseña.',
-      inputs: [
-        {
-          name: "email",
-          placeholder: "Correo electrónico"
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Aceptar',
-          handler: () => {
-            console.log('Buy clicked');
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
+  ionViewDidLoad() { }
 
   async scanEventCode() {
     this.evento = await this.barcodeScanner.scan().then(barcodeData => {
@@ -87,24 +45,36 @@ export class LoginPage {
   }
 
 
-  loginForm() {
-    // if (!this.evento) {
-    //   this.showToast('No se escaneó el evento', 2000);
-    //   return;
-    // }
+  async loginForm() {
+    if (!this.evento) {
+      this.showToast('No se escaneó el evento', 2000);
+      return;
+    }
     const data = this.todo.value;
     data.evento = this.evento;
+
+    const loader = this.loadingCtrl.create({
+      content: 'Iniciando sesión...'
+    });
+    loader.present();
     this.api.loginUsuario(data).subscribe(
       (res: any) => {
-        this.storage.set('usuario', res.data).then(re => re).catch( e => console.log(e));
-        this.navCtrl.push(MainPage);
+        this.storage.set('usuario', res.data).then(re => {
+
+          this.navCtrl.push(MainPage).then(r => {
+
+            const index = this.navCtrl.getActive().index;
+            this.navCtrl.remove(0, index);
+
+          });
+        }).catch(e => console.log(e));
+
+        loader.dismiss();
 
       }, error => {
-        console.log(error);
+        loader.dismiss();
         this.showToast("Contraseña o correo incorrectos.", 2000);
       });
-
-
 
   }
 

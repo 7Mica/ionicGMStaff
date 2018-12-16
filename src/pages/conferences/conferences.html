@@ -1,13 +1,10 @@
-<ion-header>
-  <ion-navbar>
+<ion-content padding>
 
-    <ion-searchbar (ionInput)="sjdk"></ion-searchbar>
-  </ion-navbar>
-</ion-header>
+  <ion-refresher (ionRefresh)="getConferencias($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-<ion-content class="list-avatar-page" style="background-color: #E8EAED">
-  <ion-list>
-
+  <ion-list *ngIf="conferencias">
     <ion-list-header>Hoy</ion-list-header>
 
     <ion-card *ngFor="let item of conferencias" (click)="escanear(item)">
@@ -30,12 +27,12 @@
 
   </ion-list>
 
-  <ion-list>
+  <ion-list *ngIf="conferenciasParaManana">
 
     <br>
     <ion-list-header>Mañana</ion-list-header>
 
-    <ion-card *ngFor="let manana of conferenciasParaManana" (click)="escanear(manana)">
+    <ion-card *ngFor="let manana of conferenciasParaManana">
       <img src="https://picsum.photos/g/200/50" />
       <ion-card-content>
         <ion-card-title>
