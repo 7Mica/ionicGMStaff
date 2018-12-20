@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HOST } from '../../config/config';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -10,7 +11,7 @@ export class ApiRestProvider {
 
 
   apiUrl = "https://jsonplaceholder.typicode.com";
-  api = "http://192.168.0.8:3000/";
+  api = HOST;
 
   constructor(public http: HttpClient) {
   }

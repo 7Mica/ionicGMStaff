@@ -29,7 +29,7 @@ export class MenuPage {
   cerrarSesion() {
 
     let alert = this.alertCtrl.create({
-      title: 'Atencion!',
+      title: 'Atención!',
       message: `¿Deseas cerrar sesión?`,
 
       buttons: [
