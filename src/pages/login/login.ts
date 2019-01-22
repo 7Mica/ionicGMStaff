@@ -1,15 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ApiRestProvider } from '../../providers/api-rest/api-rest';
 import { MainPage } from '../pages.index';
-
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -18,80 +13,68 @@ import { MainPage } from '../pages.index';
 })
 export class LoginPage {
 
-  todo : FormGroup;
+  todo: FormGroup;
+  evento: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private asd: ApiRestProvider
+    private api: ApiRestProvider,
+    private barcodeScanner: BarcodeScanner,
+    private storage: Storage,
+    public loadingCtrl: LoadingController
   ) {
 
     this.todo = new FormGroup({
       email: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required])
     });
+
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
-  }
+  ionViewDidLoad() { }
 
-  showPswdRecovery() {
+  async scanEventCode() {
+    this.evento = await this.barcodeScanner.scan().then(barcodeData => {
 
-    let alert = this.alertCtrl.create({
-      title: 'Recuperar contraseña',
-      message: 'Coloca el email para recuperar tu contraseña.',
-      inputs: [
-        {
-          name: "email",
-          placeholder: "Correo electrónico"
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Aceptar',
-          handler: () => {
-            console.log('Buy clicked');
-          }
-        }
-      ]
+      return barcodeData.text;
+    }).catch(err => {
+      console.log('Error', err);
     });
-    alert.present();
   }
 
 
-  loginForm() {
-    let data = {
-      "email": this.todo.value.email,
-      "password": this.todo.value.password
-    };
+  async loginForm() {
+    if (!this.evento) {
+      this.showToast('No se escaneó el evento', 2000);
+      return;
+    }
+    const data = this.todo.value;
+    data.evento = this.evento;
 
-
-    this.asd.loginUsuario(JSON.stringify(data)).subscribe(data => {
-
-      console.log(data);
-
-
-      this.navCtrl.push(MainPage);
-
-
-
-
-    }, error => {
-      console.log(error.errors);
-      this.showToast("Contraseña o correo incorrectos.", 2000);
+    const loader = this.loadingCtrl.create({
+      content: 'Iniciando sesión...'
     });
+    loader.present();
+    this.api.loginUsuario(data).subscribe(
+      (res: any) => {
+        this.storage.set('usuario', res.data).then(re => {
 
+          this.navCtrl.push(MainPage).then(r => {
 
+            const index = this.navCtrl.getActive().index;
+            this.navCtrl.remove(0, index);
+
+          });
+        }).catch(e => console.log(e));
+
+        loader.dismiss();
+
+      }, error => {
+        loader.dismiss();
+        this.showToast("Contraseña o correo incorrectos.", 2000);
+      });
 
   }
 
@@ -103,13 +86,11 @@ export class LoginPage {
     });
 
     toast.present();
-
-
   }
 
   showRegistro() {
     console.log('Registro');
-    
+
     // this.navCtrl.push(this.registro);
 
   }

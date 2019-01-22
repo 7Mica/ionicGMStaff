@@ -1,38 +1,54 @@
+<ion-content padding>
 
-<ion-header>
-  <!-- <ion-navbar>
-    <ion-title>Lista de conferencias</ion-title>
-  </ion-navbar> -->
-</ion-header>
+  <ion-refresher (ionRefresh)="getConferencias($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-<ion-content class="list-avatar-page">
-  <ion-list>
-
+  <ion-list *ngIf="conferencias">
     <ion-list-header>Hoy</ion-list-header>
 
-    <ion-item>
-      <ion-avatar item-start>
-        <img src="https://picsum.photos/g/200/300">
-      </ion-avatar>
-      <h2>Woody</h2>
-      <p>This town ain't big enough for the two of us!</p>
-      <ion-note item-end>3:43 pm</ion-note>
-    </ion-item>
+    <ion-card *ngFor="let item of conferencias" (click)="escanear(item)">
+      <img src="https://picsum.photos/g/200/50" />
+      <ion-card-content>
+        <ion-card-title>
+          {{item.titulo}}
+        </ion-card-title>
+        <p>
+          {{item.ponente.fullName}}
+        </p>
+        <p>
+          Hora de inicio: <b>{{item.hora}}</b>
+        </p>
+        <p>
+          Fecha de presentación: <b>{{ item.fecha | date: 'dd/MM/yyyy'}}</b>
+        </p>
+      </ion-card-content>
+    </ion-card>
 
   </ion-list>
 
-  <ion-list>
+  <ion-list *ngIf="conferenciasParaManana">
 
+    <br>
     <ion-list-header>Mañana</ion-list-header>
 
-    <ion-item>
-      <ion-avatar item-start>
-        <img src="https://picsum.photos/g/200/300">
-      </ion-avatar>
-      <h2>Hamm</h2>
-      <p>You heard of Kung Fu? Well get ready for pork chop.</p>
-      <ion-note item-end>11:11 pm</ion-note>
-    </ion-item>
+    <ion-card *ngFor="let manana of conferenciasParaManana">
+      <img src="https://picsum.photos/g/200/50" />
+      <ion-card-content>
+        <ion-card-title>
+          {{manana.titulo}}
+        </ion-card-title>
+        <p>
+          {{manana.ponente.fullName}}
+        </p>
+        <p>
+          Hora de inicio: <b>{{manana.hora}}</b>
+        </p>
+        <p>
+          Fecha de presentación: <b>{{ manana.fecha | date: 'dd/MM/yyyy'}}</b>
+        </p>
+      </ion-card-content>
+    </ion-card>
 
 
   </ion-list>
